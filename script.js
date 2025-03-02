@@ -8,6 +8,10 @@ let usedNumbers = JSON.parse(localStorage.getItem("usedNumbers")) || [];
 
 // Cập nhật danh sách khi load trang
 document.getElementById("usedNumbers").innerHTML = usedNumbers.join(", ");
+document.getElementById("count").innerText = usedNumbers.length;
+document.getElementById("excludedNumbers").innerHTML = excludedNumbers.join(", ");
+document.getElementById("excludedCount").innerText = excludedNumbers.length;
+document.getElementById("totalRolls").innerText = usedNumbers.length + excludedNumbers.length;
 
 document.getElementById("rollButton").addEventListener("click", function() {
     if (numbers.length === 0) {
@@ -30,6 +34,8 @@ document.getElementById("rollButton").addEventListener("click", function() {
     localStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
 
     document.getElementById("usedNumbers").innerHTML = usedNumbers.join(", ");
+    document.getElementById("count").innerText = usedNumbers.length;
+    document.getElementById("totalRolls").innerText = usedNumbers.length + excludedNumbers.length;
 });
 
 document.getElementById("resetButton").addEventListener("click", function() {
@@ -40,4 +46,6 @@ document.getElementById("resetButton").addEventListener("click", function() {
 
     document.getElementById("result").innerHTML = "Số được chọn: <span>-</span>";
     document.getElementById("usedNumbers").innerHTML = "";
+    document.getElementById("count").innerText = usedNumbers.length;
+    document.getElementById("totalRolls").innerText = usedNumbers.length + excludedNumbers.length;
 });
