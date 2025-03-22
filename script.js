@@ -1,68 +1,73 @@
-document.addEventListener("DOMContentLoaded", function() {
-    let excludedNumbers = [348, 58, 197, 297, 118, 34, 304];
-    let usedNumbers = JSON.parse(localStorage.getItem("usedNumbers")) || [];
-    let numbers = Array.from({ length: 365 }, (_, i) => i + 1)
-                       .filter(n => !excludedNumbers.includes(n) && !usedNumbers.includes(n));
+// Dãy số đã quay hiện tại
+let numbersGiven = [
+    20, 28, 32, 34, 36, 44, 84, 87, 89, 97, 99, 115, 130, 133, 135, 140, 147, 157, 158,
+    162, 166, 174, 175, 187, 194, 203, 204, 209, 212, 223, 228, 231, 233, 238, 254, 255, 265, 271,
+    283, 287, 290, 299, 300, 306, 311, 314, 317, 326, 327, 350, 362, 365
+];
 
-    function hasDuplicates(array) {
-        return new Set(array).size !== array.length;
-    }
+// Dãy số mới cần thêm vào
+const newNumbers = [
+    20, 28, 32, 34, 36, 44, 84, 87, 89, 97, 99, 115, 130, 133, 135, 140, 147, 157, 158,
+    162, 166, 174, 175, 187, 194, 203, 204, 209, 212, 223, 228, 231, 233, 238, 254, 255, 265, 271,
+    283, 287, 290, 299, 300, 306, 311, 314, 317, 326, 327, 350, 362, 365
+];
 
-    if (hasDuplicates(excludedNumbers)) {
-        alert("Danh sách loại trừ có số trùng lặp!");
-    }
+// Kết hợp số đã quay và số mới, sau đó loại bỏ các số trùng
+let updatedNumbers = Array.from(new Set(numbersGiven.concat(newNumbers)));
 
-    const usedNumbersElem = document.getElementById("usedNumbers");
-    const countElem = document.getElementById("count");
-    const excludedNumbersElem = document.getElementById("excludedNumbers");
-    const totalRollsElem = document.getElementById("totalRolls");
+// Tính tổng các số sau khi thêm mới (chỉ tính các số đã quay mà không nhân với 1000)
+let updatedTotal = updatedNumbers.reduce((sum, num) => sum + num, 0);
 
-    if (!usedNumbersElem || !countElem || !excludedNumbersElem || !totalRollsElem) {
-        console.error("Một hoặc nhiều phần tử DOM không tồn tại.");
-        return;
-    }
+// Cập nhật giao diện
+function updateUsedNumbersDisplay() {
+    const usedNumbersDiv = document.getElementById('usedNumbers');
+    // Hiển thị các số đã quay
+    usedNumbersDiv.innerHTML = updatedNumbers.join(', ');
+}
 
-    usedNumbersElem.innerHTML = usedNumbers.join(", ");
-    countElem.innerText = usedNumbers.length;
-    excludedNumbersElem.innerHTML = excludedNumbers.join(", ");
-    totalRollsElem.innerText = usedNumbers.length + excludedNumbers.length;
+function updateStats() {
+    const excludedNumbers = [...Array(365).keys()].map(n => n + 1).filter(n => !updatedNumbers.includes(n));
 
-    function rollNumber() {
-        if (numbers.length === 0) {
-            alert("Tất cả các số hợp lệ đã được quay!");
-            return;
-        }
+    document.getElementById('count').textContent = updatedNumbers.length;
+    document.getElementById('excludedNumbers').innerHTML = excludedNumbers.join(', ');
+    document.getElementById('totalRolls').textContent = updatedNumbers.length;
 
-        let randomIndex = Math.floor(Math.random() * numbers.length);
-        let randomNumber = numbers[randomIndex];
+    // Tính tổng các số đã quay mà không nhân với 1000
+    const totalInVND = (updatedTotal * 1000).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    document.getElementById('totalSum').textContent = totalInVND;
+}
 
-        // Kiểm tra và quay số mới nếu trùng lặp
-        while (usedNumbers.includes(randomNumber) || excludedNumbers.includes(randomNumber)) {
-            randomIndex = Math.floor(Math.random() * numbers.length);
-            randomNumber = numbers[randomIndex];
-        }
+// Cập nhật giao diện khi trang tải
+window.onload = function() {
+    updateUsedNumbersDisplay();
+    updateStats();
+};
 
-        document.getElementById("result").innerHTML = `Số được chọn: <span>${randomNumber}</span>`;
-        usedNumbers.push(randomNumber);
-        numbers = numbers.filter(num => num !== randomNumber);
+// Xử lý quay số
+document.getElementById('rollButton').addEventListener('click', function() {
+    let rolledNumber;
+    
+    // Quay số cho đến khi không trùng
+    do {
+        rolledNumber = Math.floor(Math.random() * 365) + 1;
+    } while (updatedNumbers.includes(rolledNumber)); // Kiểm tra số đã quay
 
-        localStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-        usedNumbersElem.innerHTML = usedNumbers.join(", ");
-        countElem.innerText = usedNumbers.length;
-        totalRollsElem.innerText = usedNumbers.length + excludedNumbers.length;
-    }
+    document.getElementById('result').innerHTML = `Số được chọn: <span>${rolledNumber}</span>`;
 
-    document.getElementById("rollButton").addEventListener("click", rollNumber);
+    // Lưu số đã quay vào danh sách
+    updatedNumbers.push(rolledNumber);
+    updatedTotal += rolledNumber; // Cộng số mới vào tổng
 
-    document.getElementById("resetButton").addEventListener("click", function() {
-        usedNumbers = [];
-        localStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-        numbers = Array.from({ length: 365 }, (_, i) => i + 1)
-                       .filter(n => !excludedNumbers.includes(n));
+    // Cập nhật giao diện
+    updateUsedNumbersDisplay();
+    updateStats();
+});
 
-        document.getElementById("result").innerHTML = "Số được chọn: <span>-</span>";
-        usedNumbersElem.innerHTML = "";
-        countElem.innerText = usedNumbers.length;
-        totalRollsElem.innerText = usedNumbers.length + excludedNumbers.length;
-    });
+// Nút "Reset"
+document.getElementById('resetButton').addEventListener('click', function() {
+    updatedNumbers = Array.from(new Set(numbersGiven.concat(newNumbers))); // Khôi phục lại danh sách ban đầu
+    updatedTotal = updatedNumbers.reduce((sum, num) => sum + num, 0); // Cập nhật lại tổng
+    updateUsedNumbersDisplay();
+    updateStats();
+    document.getElementById('result').innerHTML = 'Số được chọn: <span>-</span>';
 });
