@@ -10,17 +10,19 @@
     <div class="container">
         <h1>🎲 Quay số ngẫu nhiên (1 - 365)</h1>
         <button id="rollButton">Quay số</button>
-        <button id="resetButton">Reset</button>
-        <button id="rerollButton" style="display: none;">Quay tiếp</button>
         <h2 id="result">Số được chọn: <span>-</span></h2>
         <h3>Danh sách số đã quay:</h3>
         <div id="usedNumbers"></div>
         <h3>Số lượng số đã quay: <span id="count">0</span></h3>
-        <h3>Số bị loại:</h3>
+        <h3>Số chưa quay:</h3>
         <div id="excludedNumbers"></div>
         <h3>Tổng số quay: <span id="totalRolls">0</span></h3>
+        <h3>Tổng giá trị các số đã quay: <span id="totalSum">0</span></h3>
+
+        <!-- Nút "Reset" nằm dưới cùng -->
+        <button id="resetButton">Reset</button>
     </div>
 
-    <script src="script.js"></script> <!-- Moved script to the end of the body -->
+    <script src="script.js"></script>
 </body>
 </html>
