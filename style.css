@@ -56,3 +56,19 @@ h2 {
     font-size: 16px;
     border-radius: 5px;
 }
+
+/* Media query cho màn hình nhỏ */
+@media (max-width: 768px) {
+    .container {
+        width: 80%;  /* Giảm chiều rộng của container khi trên di động */
+    }
+
+    #resetButton {
+        position: relative;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        bottom: auto;
+        right: auto;
+        width: 100%; /* Để nút Reset chiếm toàn bộ chiều rộng */
+    }
+}
