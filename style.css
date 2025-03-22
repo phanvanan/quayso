@@ -12,6 +12,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 50px;
+    position: relative; /* Thêm vị trí relative để chứa nút ở góc */
 }
 
 button {
@@ -42,4 +43,16 @@ h2 {
     margin-top: 10px;
     font-size: 18px;
     color: #555;
+}
+
+/* Định vị nút Reset ở góc dưới bên phải */
+#resetButton {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #DC3545; /* Màu đỏ cho nút Reset */
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
 }
